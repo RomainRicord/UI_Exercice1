@@ -16,7 +16,7 @@ const App = () => {
 
   const [masterDataSource, setMasterDataSource] = useState([]);
 
-  const searchFilterFunction = (text) => {
+  const searchFilterFunction = (text) => { // Thanks https://aboutreact.com/react-native-search-bar-filter-on-listview/
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank

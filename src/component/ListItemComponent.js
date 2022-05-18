@@ -6,10 +6,10 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 const ListItemComponent = (props) => {
 
-    const {i,name,subtitle} = props
+    const {k,name,subtitle} = props
 
     return(<ListItem
-        key={i}
+        key={k}
         title={name}
         subtitle={subtitle}
         bottomDivider
