@@ -2,4 +2,4 @@
 
 Aperçu:
 
-![Aperçu de l'application][https://i.imgur.com/1vTBKWm.jpg]
+![Aperçu de l'application](https://i.imgur.com/1vTBKWm.jpg)
