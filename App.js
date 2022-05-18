@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {
@@ -10,67 +10,98 @@ import {
 } from 'react-native-safe-area-context';
 import {Header,SearchBar} from '@rneui/base'
 import { ListItem } from 'react-native-elements'
+import { ScrollView } from 'react-native-gesture-handler';
+import HeaderComponent from './src/component/HeaderComponent';
+import AvatarComponent from './src/component/AvatarComponent';
+import InformationComponent from './src/component/InformationComponent';
+import MapComponent from './src/component/MapComponent';
 
 const App = () => {
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
+  const [masterDataSource, setMasterDataSource] = useState([]);
+
+  const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = masterDataSource.filter(
+        function (item) {
+          // Applying filter for the inserted text in search bar
+          const itemData = item.name
+              ? item.name.toUpperCase()
+              : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+      );
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(masterDataSource);
+      setSearch(text);
+    }
+  }
 
   const list = [
     {
       name: 'Amy Farha',
-      avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
       subtitle: 'Appli Mobile P1'
     },
     {
       name: 'Chris Jackson',
-      avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
       subtitle: 'Appli Mobile P2'
     },
     {
       name: 'Michael Jackson',
-      avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
       subtitle: 'Appli Web P1'
     },
+    {
+      name: 'Pascal Yop',
+      subtitle: 'Appli Android P1'
+    },
+    {
+      name: 'Romain Ricord',
+      subtitle: 'Appli Android P1'
+    },
+    {
+      name: 'Michel Jack',
+      subtitle: 'Appli Android P1'
+    },
+    {
+      name: 'Prénom nom',
+      subtitle: 'Appli Android P1'
+    },
+    {
+      name: 'Prénom nom',
+      subtitle: 'Appli Android P1'
+    }
   ]
 
-  const getavatarcharacter = (name) => {
-    return name.charAt(0) + name.split(' ')[1].charAt(0)
-  }
+  useEffect(()=> {
+    setFilteredDataSource(list);
+    setMasterDataSource(list);
+  },[])
 
   return (
     <SafeAreaProvider>
-    <Header
-      leftComponent={{ icon: 'menu', color: '#fff' }}
-      centerComponent={{ text: 'Apprenants de La Manu', style: { color: '#fff' } }}
-    />
+    <HeaderComponent/>
     <SearchBar  placeholder="ex. John DOE"
-      onChangeText={updateSearch}
-      value={search}/>
-      {
-        list.map((l, i) => {
-          return(<ListItem
-            key={i}
-            leftAvatar={{ source: { uri: l.avatar_url } }}
-            title={l.name}
-            subtitle={l.subtitle}
-            bottomDivider
-          ><View style={{width:60,height:60,backgroundColor:'black',borderRadius:60,display:'flex',justifyContent:'center',alignItems:'center'}}>
-            <Text style={{color:'white',fontSize:20}}>{getavatarcharacter(l.name)}</Text>
-            </View>
-            <View style={{display:'flex',flex:1,flexDirection:'row' ,justifyContent:'space-between',alignItems:'center'}}>
-              <View style={{display:'flex'}}>
-              <Text style={{fontSize:20,fontWeight:'bold'}}>{l.name}</Text>
-              <Text style={{fontSize:20}}>{l.subtitle}</Text>
-              </View>
-              <Text>></Text>
-            </View>
-            </ListItem>)
-        })
-      }
+      onChangeText={(text) => searchFilterFunction(text)}
+      value={search}
+      inputContainerStyle={{
+        flexDirection:'row-reverse'
+      }}
+      />
+      <ScrollView>
+        <MapComponent filteredDataSource={filteredDataSource} />
+      </ScrollView>
     </SafeAreaProvider>
   );
 }
